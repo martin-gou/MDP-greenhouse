@@ -147,6 +147,97 @@ ros2 launch mdp_greenhouse_simulation greenhouse_mirte_navigation.launch.py \
 
 The `.yaml` file must point to the matching `.pgm` image. If the YAML says `image: my_map.pgm`, keep both files in the same directory.
 
+## REAL_MIRTE Commands
+
+Use this section when this machine is connected to the real MIRTE robot over ROS 2 and can see/publish the robot topics. Do not launch Gazebo for the real robot.
+
+Source the workspace:
+
+```bash
+source /home/spatial-ai/ws/install/setup.bash
+source /home/spatial-ai/mirte_simulation/install/setup.bash
+```
+
+Check that this machine can see the robot topics:
+
+```bash
+ros2 topic list
+```
+
+Important real MIRTE topics from the saved topic list:
+
+```text
+/scan
+/tf
+/tf_static
+/robot_description
+/joint_states
+/mirte_base_controller/cmd_vel
+/mirte_base_controller/odom
+```
+
+### Real Robot Teleop
+
+For the real robot, publish velocity commands to `/mirte_base_controller/cmd_vel`:
+
+```bash
+ros2 run teleop_twist_keyboard teleop_twist_keyboard \
+  --ros-args --remap cmd_vel:=/mirte_base_controller/cmd_vel
+```
+
+### Build A Real Map
+
+Run Cartographer on the real robot topics. This launch does not start Gazebo and uses real time.
+
+```bash
+ros2 launch mdp_greenhouse_simulation real_mirte_cartographer.launch.py
+```
+
+Drive the real robot slowly with teleop:
+
+```bash
+ros2 run teleop_twist_keyboard teleop_twist_keyboard \
+  --ros-args --remap cmd_vel:=/mirte_base_controller/cmd_vel
+```
+
+When the map looks good in RViz, save it:
+
+```bash
+mkdir -p /home/spatial-ai/mirte_simulation/info
+cd /home/spatial-ai/mirte_simulation/info
+ros2 run nav2_map_server map_saver_cli -f real_mirte_map
+```
+
+This creates:
+
+```text
+/home/spatial-ai/mirte_simulation/info/real_mirte_map.yaml
+/home/spatial-ai/mirte_simulation/info/real_mirte_map.pgm
+```
+
+### Load Real Navigation With A Saved Map
+
+Start Nav2 with the real map and real time. This launch does not start Gazebo. It remaps Nav2 velocity output to `/mirte_base_controller/cmd_vel` and odometry subscriptions to `/mirte_base_controller/odom`.
+
+```bash
+ros2 launch mdp_greenhouse_simulation real_mirte_navigation.launch.py \
+  map:=/home/spatial-ai/mirte_simulation/info/real_mirte_map.yaml
+```
+
+In RViz:
+
+1. Use **2D Pose Estimate** to set the robot pose on the map.
+2. Use **Nav2 Goal** to send a navigation target.
+
+Important: this launch remaps Nav2 `/cmd_vel` to `/mirte_base_controller/cmd_vel`. If the robot does not move, check:
+
+```bash
+ros2 topic info /cmd_vel
+ros2 topic info /mirte_base_controller/cmd_vel
+```
+
+The real robot must receive Nav2 velocity commands on `/mirte_base_controller/cmd_vel`.
+
 ## Useful Options
 
 Run navigation without RViz:
@@ -175,9 +266,13 @@ launch/greenhouse_simulation.launch.py
 launch/greenhouse_mirte_master.launch.py
 launch/greenhouse_mirte_cartographer.launch.py
 launch/greenhouse_mirte_navigation.launch.py
+launch/real_mirte_cartographer.launch.py
+launch/real_mirte_navigation.launch.py
 worlds/mdp_greenhouse.world
 config/mirte_2d.lua
+config/real_mirte_2d.lua
 config/nav2_mirte_params.yaml
+config/nav2_real_mirte_params.yaml
 rviz/greenhouse_cartographer.rviz
 ```
 
