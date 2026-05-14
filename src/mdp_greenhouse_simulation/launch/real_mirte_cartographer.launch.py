@@ -1,8 +1,7 @@
 """Launch Cartographer mapping for the real MIRTE robot.
 
 This launch assumes this computer is on the same ROS 2 network as MIRTE and
-can see the real robot topics, including /scan, /tf, /tf_static, and
-/mirte_base_controller/odom.
+can see the real robot topics, including /scan, /tf, and /tf_static.
 """
 
 from launch import LaunchDescription
@@ -47,9 +46,6 @@ def generate_launch_description():
                 cartographer_config_dir,
                 '-configuration_basename',
                 'real_mirte_2d.lua',
-            ],
-            remappings=[
-                ('odom', '/mirte_base_controller/odom'),
             ],
         ),
         Node(

@@ -79,6 +79,36 @@ ros2 run teleop_twist_keyboard teleop_twist_keyboard \
   --ros-args --remap cmd_vel:=/mirte_base_controller/cmd_vel_unstamped
 ```
 
+## Test Cartographer With Bad Odometry
+
+This launch is for simulation experiments only. It starts the greenhouse simulation, creates a fake odometry topic `/bad_odom`, and scales the normal simulation odometry by `3.0` before giving it to Cartographer.
+
+```bash
+ros2 launch mdp_greenhouse_simulation greenhouse_mirte_cartographer_test.launch.py
+```
+
+Change the scale factor:
+
+```bash
+ros2 launch mdp_greenhouse_simulation greenhouse_mirte_cartographer_test.launch.py odom_scale:=3.0
+```
+
+Teleop is the same as the normal simulation mapping launch:
+
+```bash
+ros2 run teleop_twist_keyboard teleop_twist_keyboard \
+  --ros-args --remap cmd_vel:=/mirte_base_controller/cmd_vel_unstamped
+```
+
+The test launch publishes:
+
+```text
+/bad_odom
+bad_odom -> base_link
+```
+
+Cartographer then uses `/bad_odom` instead of `/odom`, so you can observe how bad odometry affects mapping.
+
 When the map looks good, save it:
 
 ```bash
@@ -265,11 +295,13 @@ ros2 launch mdp_greenhouse_simulation greenhouse_mirte_navigation.launch.py \
 launch/greenhouse_simulation.launch.py
 launch/greenhouse_mirte_master.launch.py
 launch/greenhouse_mirte_cartographer.launch.py
+launch/greenhouse_mirte_cartographer_test.launch.py
 launch/greenhouse_mirte_navigation.launch.py
 launch/real_mirte_cartographer.launch.py
 launch/real_mirte_navigation.launch.py
 worlds/mdp_greenhouse.world
 config/mirte_2d.lua
+config/mirte_2d_bad_odom.lua
 config/real_mirte_2d.lua
 config/nav2_mirte_params.yaml
 config/nav2_real_mirte_params.yaml
@@ -278,7 +310,8 @@ rviz/greenhouse_cartographer.rviz
 
 ## Notes
 
-- Cartographer mapping uses `/scan`, `/odom`, and the MIRTE TF tree.
+- Simulation Cartographer mapping uses `/scan`, `/odom`, and the MIRTE TF tree.
+- Real MIRTE Cartographer mapping ignores wheel odometry and uses lidar scan matching because the real odometry can be inaccurate.
 - Mapping/manual teleop uses `/mirte_base_controller/cmd_vel_unstamped`.
 - Nav2 navigation uses `/cmd_vel` directly.
 - If Gazebo says the master port is already in use, stop the old Gazebo process or launch with a different `GAZEBO_MASTER_URI`.

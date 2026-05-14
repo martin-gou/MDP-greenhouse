@@ -16,8 +16,10 @@
   <exec_depend>launch_ros</exec_depend>
   <exec_depend>mirte_gazebo</exec_depend>
   <exec_depend>mirte_master_description</exec_depend>
+  <exec_depend>nav_msgs</exec_depend>
   <exec_depend>robot_state_publisher</exec_depend>
   <exec_depend>rviz2</exec_depend>
+  <exec_depend>tf2_ros</exec_depend>
   <exec_depend>twist_mux</exec_depend>
   <exec_depend>xacro</exec_depend>
 
