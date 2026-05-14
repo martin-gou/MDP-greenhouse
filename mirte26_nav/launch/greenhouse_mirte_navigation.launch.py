@@ -11,7 +11,7 @@ from launch_ros.substitutions import FindPackageShare
 
 
 def generate_launch_description():
-    pkg_share = FindPackageShare('mdp_greenhouse_simulation')
+    pkg_share = FindPackageShare('mirte26_nav')
     sim_launch = PathJoinSubstitution([
         pkg_share,
         'launch',

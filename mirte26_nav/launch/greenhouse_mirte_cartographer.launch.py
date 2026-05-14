@@ -1,4 +1,4 @@
-"""Launch simulation Cartographer with intentionally bad odometry."""
+"""Launch greenhouse + MIRTE Master + Cartographer mapping."""
 
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
@@ -12,7 +12,7 @@ from launch_ros.substitutions import FindPackageShare
 
 
 def generate_launch_description():
-    pkg_share = FindPackageShare('mdp_greenhouse_simulation')
+    pkg_share = FindPackageShare('mirte26_nav')
     sim_launch = PathJoinSubstitution([
         pkg_share,
         'launch',
@@ -32,7 +32,6 @@ def generate_launch_description():
     resolution = LaunchConfiguration('resolution')
     publish_period_sec = LaunchConfiguration('publish_period_sec')
     use_rviz = LaunchConfiguration('use_rviz')
-    odom_scale = LaunchConfiguration('odom_scale')
 
     return LaunchDescription([
         DeclareLaunchArgument('use_sim_time', default_value='true'),
@@ -42,7 +41,6 @@ def generate_launch_description():
         DeclareLaunchArgument('use_rviz', default_value='true'),
         DeclareLaunchArgument('resolution', default_value='0.05'),
         DeclareLaunchArgument('publish_period_sec', default_value='1.0'),
-        DeclareLaunchArgument('odom_scale', default_value='3.0'),
         DeclareLaunchArgument('x', default_value='2.5'),
         DeclareLaunchArgument('y', default_value='0.8'),
         DeclareLaunchArgument('z', default_value='0.05'),
@@ -64,21 +62,6 @@ def generate_launch_description():
             }.items(),
         ),
         Node(
-            package='mdp_greenhouse_simulation',
-            executable='scaled_odom.py',
-            name='scaled_odom',
-            output='screen',
-            parameters=[{
-                'use_sim_time': use_sim_time,
-                'scale': odom_scale,
-                'input_topic': '/odom',
-                'output_topic': '/bad_odom',
-                'output_frame': 'bad_odom',
-                'child_frame': 'base_link',
-                'publish_tf': True,
-            }],
-        ),
-        Node(
             package='cartographer_ros',
             executable='cartographer_node',
             name='cartographer_node',
@@ -88,10 +71,7 @@ def generate_launch_description():
                 '-configuration_directory',
                 cartographer_config_dir,
                 '-configuration_basename',
-                'mirte_2d_bad_odom.lua',
-            ],
-            remappings=[
-                ('odom', '/bad_odom'),
+                'mirte_2d.lua',
             ],
         ),
         Node(

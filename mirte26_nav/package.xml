@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package format="3">
-  <name>mdp_greenhouse_simulation</name>
+  <name>mirte26_nav</name>
   <version>0.0.1</version>
   <description>Gazebo simulation environment matching the mdp-greenhouse default map.</description>
   <maintainer email="user@example.com">spatial-ai</maintainer>

@@ -1,4 +1,4 @@
-# mdp_greenhouse_simulation
+# mirte26_nav
 
 Gazebo Classic simulation package for the `mdp-greenhouse` default greenhouse layout, with launch files for:
 
@@ -20,7 +20,7 @@ From the workspace root:
 
 ```bash
 cd /home/spatial-ai/mirte_simulation
-colcon build --packages-select mdp_greenhouse_simulation
+colcon build --packages-select mirte26_nav
 ```
 
 Source both workspaces before running launches:
@@ -33,25 +33,25 @@ source /home/spatial-ai/mirte_simulation/install/setup.bash
 ## Launch Greenhouse Only
 
 ```bash
-ros2 launch mdp_greenhouse_simulation greenhouse_simulation.launch.py
+ros2 launch mirte26_nav greenhouse_simulation.launch.py
 ```
 
 Headless:
 
 ```bash
-ros2 launch mdp_greenhouse_simulation greenhouse_simulation.launch.py gui:=false
+ros2 launch mirte26_nav greenhouse_simulation.launch.py gui:=false
 ```
 
 ## Launch Greenhouse With MIRTE
 
 ```bash
-ros2 launch mdp_greenhouse_simulation greenhouse_mirte_master.launch.py
+ros2 launch mirte26_nav greenhouse_mirte_master.launch.py
 ```
 
 Change the robot start pose:
 
 ```bash
-ros2 launch mdp_greenhouse_simulation greenhouse_mirte_master.launch.py \
+ros2 launch mirte26_nav greenhouse_mirte_master.launch.py \
   x:=2.5 y:=0.8 yaw:=1.5708
 ```
 
@@ -67,7 +67,7 @@ ros2 run teleop_twist_keyboard teleop_twist_keyboard \
 Launch Gazebo, MIRTE, Cartographer, and RViz:
 
 ```bash
-ros2 launch mdp_greenhouse_simulation greenhouse_mirte_cartographer.launch.py
+ros2 launch mirte26_nav greenhouse_mirte_cartographer.launch.py
 ```
 
 RViz opens by default and shows the live map, laser scan, TF, and robot model.
@@ -84,13 +84,13 @@ ros2 run teleop_twist_keyboard teleop_twist_keyboard \
 This launch is for simulation experiments only. It starts the greenhouse simulation, creates a fake odometry topic `/bad_odom`, and scales the normal simulation odometry by `3.0` before giving it to Cartographer.
 
 ```bash
-ros2 launch mdp_greenhouse_simulation greenhouse_mirte_cartographer_test.launch.py
+ros2 launch mirte26_nav greenhouse_mirte_cartographer_test.launch.py
 ```
 
 Change the scale factor:
 
 ```bash
-ros2 launch mdp_greenhouse_simulation greenhouse_mirte_cartographer_test.launch.py odom_scale:=3.0
+ros2 launch mirte26_nav greenhouse_mirte_cartographer_test.launch.py odom_scale:=3.0
 ```
 
 Teleop is the same as the normal simulation mapping launch:
@@ -135,7 +135,7 @@ The navigation launch defaults to:
 Run:
 
 ```bash
-ros2 launch mdp_greenhouse_simulation greenhouse_mirte_navigation.launch.py
+ros2 launch mirte26_nav greenhouse_mirte_navigation.launch.py
 ```
 
 This starts:
@@ -164,14 +164,14 @@ ros2 run teleop_twist_keyboard teleop_twist_keyboard
 Use the `map` launch argument:
 
 ```bash
-ros2 launch mdp_greenhouse_simulation greenhouse_mirte_navigation.launch.py \
+ros2 launch mirte26_nav greenhouse_mirte_navigation.launch.py \
   map:=/absolute/path/to/your_map.yaml
 ```
 
 Example:
 
 ```bash
-ros2 launch mdp_greenhouse_simulation greenhouse_mirte_navigation.launch.py \
+ros2 launch mirte26_nav greenhouse_mirte_navigation.launch.py \
   map:=/home/spatial-ai/mirte_simulation/info/my_map.yaml
 ```
 
@@ -220,7 +220,7 @@ ros2 run teleop_twist_keyboard teleop_twist_keyboard \
 Run Cartographer on the real robot topics. This launch does not start Gazebo and uses real time.
 
 ```bash
-ros2 launch mdp_greenhouse_simulation real_mirte_cartographer.launch.py
+ros2 launch mirte26_nav real_mirte_cartographer.launch.py
 ```
 
 Drive the real robot slowly with teleop:
@@ -250,7 +250,7 @@ This creates:
 Start Nav2 with the real map and real time. This launch does not start Gazebo. It remaps Nav2 velocity output to `/mirte_base_controller/cmd_vel` and odometry subscriptions to `/mirte_base_controller/odom`.
 
 ```bash
-ros2 launch mdp_greenhouse_simulation real_mirte_navigation.launch.py \
+ros2 launch mirte26_nav real_mirte_navigation.launch.py \
   map:=/home/spatial-ai/mirte_simulation/info/real_mirte_map.yaml
 ```
 
@@ -273,19 +273,19 @@ The real robot must receive Nav2 velocity commands on `/mirte_base_controller/cm
 Run navigation without RViz:
 
 ```bash
-ros2 launch mdp_greenhouse_simulation greenhouse_mirte_navigation.launch.py use_rviz:=false
+ros2 launch mirte26_nav greenhouse_mirte_navigation.launch.py use_rviz:=false
 ```
 
 Run navigation without Gazebo GUI:
 
 ```bash
-ros2 launch mdp_greenhouse_simulation greenhouse_mirte_navigation.launch.py gui:=false
+ros2 launch mirte26_nav greenhouse_mirte_navigation.launch.py gui:=false
 ```
 
 Start the robot at a different pose:
 
 ```bash
-ros2 launch mdp_greenhouse_simulation greenhouse_mirte_navigation.launch.py \
+ros2 launch mirte26_nav greenhouse_mirte_navigation.launch.py \
   x:=2.5 y:=1.0 yaw:=1.5708
 ```
 

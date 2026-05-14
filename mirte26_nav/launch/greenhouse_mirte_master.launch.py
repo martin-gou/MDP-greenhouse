@@ -17,7 +17,7 @@ from launch_xml.launch_description_sources import XMLLaunchDescriptionSource
 
 def generate_launch_description():
     world = PathJoinSubstitution([
-        FindPackageShare('mdp_greenhouse_simulation'),
+        FindPackageShare('mirte26_nav'),
         'worlds',
         'mdp_greenhouse.world',
     ])

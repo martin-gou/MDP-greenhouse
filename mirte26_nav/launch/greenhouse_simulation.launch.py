@@ -11,7 +11,7 @@ from launch.substitutions import PathJoinSubstitution
 
 def generate_launch_description():
     default_world = PathJoinSubstitution([
-        FindPackageShare('mdp_greenhouse_simulation'),
+        FindPackageShare('mirte26_nav'),
         'worlds',
         'mdp_greenhouse.world',
     ])
